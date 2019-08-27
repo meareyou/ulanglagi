@@ -49,7 +49,7 @@ async def gban_all(msg):
             except TypeError:
                 banreason = "[userbot] fban"
         if not textx:
-            await msg.edit("Reply Message missing! Might fail on many bots! Still attempting Gban!")
+            await msg.edit("`Reply Message missing! Might fail on many bots! Still attempting Gban!`")
             # Ensure User Read the warning
             await asyncio.sleep(1)
         x=(get_gban())
@@ -58,9 +58,9 @@ async def gban_all(msg):
         for i in x:
             banlist.append(i.chat_id)
         for banbot in banlist:
-            async with msg.client.conversation(banbot) as conv:
+            async with bot.conversation(banbot) as conv:
                 if textx:
-                    c=await msg.forward_to(banbot)
+                    c = await msg.forward_to(banbot)
                     await c.reply("/id")
                 await conv.send_message(f"/gban {banid} {banreason}")
                 resp = await conv.get_response()
