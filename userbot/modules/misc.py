@@ -13,6 +13,7 @@ from os import execl
 import sys
 import os
 import sys
+import json
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
 from userbot.events import register
 from userbot.events import register, errors_handler
@@ -149,24 +150,26 @@ async def json(event):
         reply_to_id = None
         if event.reply_to_msg_id:
             previous_message = await event.get_reply_message()
-            the_real_message = previous_message.stringify()
+            #the_real_message = previous_message.stringify()
+            the_real_message = json.dumps(previous_message, 
+                                          sort_keys = True, indent = 4)
             reply_to_id = event.reply_to_msg_id
         else:
-            the_real_message = event.stringify()
+            the_real_message = json.dumps(event, 
+                                          sort_keys = True, indent = 4)
             reply_to_id = event.message.id
-        if len(the_real_message) > 4096:
-            with io.BytesIO(str.encode(the_real_message)) as out_file:
-                out_file.name = "message.json"
-                await event.client.send_file(
-                    event.chat_id,
-                    out_file,
-                    force_document=True,
-                    allow_cache=False,
-                    reply_to=reply_to_id
-                )
-                await event.delete()
-        else:
-            await event.edit(f"`{the_real_message}`")
+            
+        with io.BytesIO(str.encode(the_real_message)) as out_file:
+            out_file.name = "message.json"
+            await event.client.send_file(
+                event.chat_id,
+                out_file,
+                force_document=True,
+                allow_cache=False,
+                reply_to=reply_to_id
+                caption = "`Here's the decoded message data !!`"
+            )
+            await event.delete()
 
 CMD_HELP.update({
     'random': '.random <item1> <item2> ... <itemN>\
