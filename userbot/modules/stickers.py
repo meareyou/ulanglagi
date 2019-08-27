@@ -20,13 +20,13 @@ from telethon.tl.types import InputStickerSetID
 from telethon.tl.types import DocumentAttributeSticker
 
 KANGING_STR = [
-    "I'm a sneaky fox,\nsneaked in your house,\nsat on your couch,\nate your pasta,\nkanging this sticker...",
-    "--------------",
-    "--------------",
-    "--------------",
-    "--------------",
-    "--------------",
-    "--------------",
+    "Using Witchery to kang this sticker...",
+    "Plagiarising hehe...",
+    "Inviting this sticker over to my pack...",
+    "Kanging this sticker...",
+    "Hey that's a nice sticker!\nMind if I kang?...",
+    "hehe me stel ur stikér\nhehe.",
+    "Ay look over there (☉｡☉)!→\nWhile I kang this...",
 ]
 
 @register(outgoing=True, pattern="^.kang")
@@ -49,7 +49,7 @@ async def kang(args):
                 photo = io.BytesIO()
                 photo = await bot.download_media(message.photo, photo)
             elif "image" in message.media.document.mime_type.split('/'):
-                await args.edit("Using witchery to kang this sticker...")
+                await args.edit(f"`{random.choice(KANGING_STR)}`")
                 photo = io.BytesIO()
                 await bot.download_file(message.media.document, photo)
                 if (DocumentAttributeFilename(file_name='sticker.webp')
