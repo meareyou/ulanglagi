@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 #
 
-from userbot import CMD_HELP
+from userbot import bot, CMD_HELP
 from userbot.events import register, errors_handler
 from telethon.tl.types import MessageEntityMentionName
 import asyncio
@@ -85,7 +85,7 @@ async def fedban_all(msg):
             try:
                 banreason = "[userbot] "
                 banreason+=banreason.join(msg.text.split(" ")[1:])
-                if banreason == "[userbot]":
+                if banreason == "[userbot] ":
                     raise TypeError
             except TypeError:
                 banreason = "[userbot] fban"
@@ -106,7 +106,7 @@ async def fedban_all(msg):
             try:
                 banreason = "[userbot] "
                 banreason+=banreason.join(msg.text.split(" ")[2:])
-                if banreason == "[userbot]":
+                if banreason == "[userbot] ":
                     raise TypeError
             except TypeError:
                 banreason = "[userbot] fban"
@@ -134,14 +134,14 @@ async def fedban_all(msg):
                 else:
                     await msg.reply("`Spam message detected. But no reply message, can't forward to spamwatch`")
               continue
-            async with msg.client.conversation(bangroup) as conv:
+            async with bot.conversation(bangroup) as conv:
                 await conv.send_message(f"!fban {banid} {banreason}")
                 resp = await conv.get_response()
                 await bot.send_read_acknowledge(conv.chat_id)
                 if "Beginning federation ban " not in resp.text:
                     failed[bangroup] = str(conv.chat_id)
                 else:
-                    count+=1
+                    count += 1
                     await msg.edit("`Fbanned on "+str(count)+" feds!`")
                 # Sleep to avoid a floodwait.
                 # Prevents floodwait if user is a fedadmin on too many feds
