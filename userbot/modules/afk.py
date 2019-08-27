@@ -97,8 +97,11 @@ async def afk_on_pm(sender):
             from userbot.modules.sql_helper.pm_permit_sql import is_approved
         except AttributeError:
             return
-        apprv = is_approved(sender.sender_id)
-        if (PM_AUTO_BAN and apprv) and ISAFK:
+        if PM_AUTO_BAN:
+            apprv = is_approved(sender.sender_id)
+        else:
+            apprv = True # duh.
+        if apprv and ISAFK:
             if sender.sender_id not in USERS:
                 if AFKREASON:
                     await sender.reply(
