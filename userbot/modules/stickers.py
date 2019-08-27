@@ -11,6 +11,7 @@ import math
 import urllib.request
 from os import remove
 from PIL import Image
+import random
 from telethon.tl.types import DocumentAttributeFilename, MessageMediaPhoto
 from userbot import bot, CMD_HELP
 from userbot.events import register, errors_handler
@@ -18,6 +19,15 @@ from telethon.tl.functions.messages import GetStickerSetRequest
 from telethon.tl.types import InputStickerSetID
 from telethon.tl.types import DocumentAttributeSticker
 
+KANGING_STR = [
+    "I'm a sneaky fox,\nsneaked in your house,\nsat on your couch,\nate your pasta,\nkanging this sticker...",
+    "--------------",
+    "--------------",
+    "--------------",
+    "--------------",
+    "--------------",
+    "--------------",
+]
 
 @register(outgoing=True, pattern="^.kang")
 @errors_handler
@@ -35,7 +45,7 @@ async def kang(args):
 
         if message and message.media:
             if isinstance(message.media, MessageMediaPhoto):
-                await args.edit("Waiting for Global Warming to melt this pic into a sticker...")
+                await args.edit(f"`{random.choice(KANGING_STR)}`")
                 photo = io.BytesIO()
                 photo = await bot.download_media(message.photo, photo)
             elif "image" in message.media.document.mime_type.split('/'):
@@ -47,7 +57,7 @@ async def kang(args):
                     emoji = message.media.document.attributes[1].alt
                     emojibypass = True
             elif "tgsticker" in message.media.document.mime_type:
-                await args.edit("Taming this animated sticker...")
+                await args.edit(f"`{random.choice(KANGING_STR)}`")
                 await bot.download_file(message.media.document, 'AnimatedSticker.tgs')
 
                 attributes = message.media.document.attributes
