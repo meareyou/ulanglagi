@@ -47,45 +47,6 @@ async def chatidgetter(chat):
         await chat.edit("Chat ID: `" + str(chat.chat_id) + "`")
 
 
-@register(outgoing=True, pattern="^.mention(?: |$)(.*)")
-@errors_handler
-async def mention(event):	
-    if not event.text[0].isalpha() and event.text[0] not in ("/", "#", "@", "!"):
-	input_str = event.pattern_match.group(1)
-
-	if event.reply_to_msg_id:
-		previous_message = await event.get_reply_message()
-		if previous_message.forward:
-			replied_user = await bot(GetFullUserRequest(previous_message.forward.from_id))
-		else:
-			replied_user = await bot(GetFullUserRequest(previous_message.from_id))
-	else:
-		if event.message.entities is not None:
-			mention_entity = event.message.entities
-			probable_user_mention_entity = mention_entity[0]
-			if type(probable_user_mention_entity) == MessageEntityMentionName:
-				user_id = probable_user_mention_entity.user_id
-				replied_user = await bot(GetFullUserRequest(user_id))
-		else:
-			try:
-				user_object = await bot.get_entity(input_str)
-				user_id = user_object.id
-				replied_user = await bot(GetFullUserRequest(user_id))
-			except Exception as e:
-				await event.edit(str(e))
-				return
-
-	user_id = replied_user.user.id
-	caption = """<a href='tg://user?id={}'>{}</a>""".format(user_id, input_str)
-	await bot.send_message(
-		e.chat_id,
-		caption,
-		parse_mode="HTML",        
-		force_document=False,
-		silent=True
-		)
-	await e.delete()
-
 @register(outgoing=True, pattern=r"^.log(?: |$)([\s\S]*)")
 @errors_handler
 async def log(log_text):
@@ -115,6 +76,8 @@ async def kickme(leave):
     """ Basically it's .kickme command """
     if not leave.text[0].isalpha() and leave.text[0] not in ("/", "#", "@", "!"):
         await leave.edit("`Nope, no, no, I go away`")
+		sleep(2)
+		await leave.delete()
         await bot(LeaveChannelRequest(leave.chat_id))
 
 
@@ -130,6 +93,8 @@ async def unmute_chat(unm_e):
             return
         unkread(str(unm_e.chat_id))
         await unm_e.edit("```Unmuted this chat Successfully```")
+		sleep(2)
+		await unm_e.delete()
 
 
 @register(outgoing=True, pattern="^.mutechat$")
@@ -145,6 +110,8 @@ async def mute_chat(mute_e):
         await mute_e.edit(str(mute_e.chat_id))
         kread(str(mute_e.chat_id))
         await mute_e.edit("`Shush! This chat will be silenced!`")
+		sleep(2)
+		await mute_e.delete()
         if BOTLOG:
             await mute_e.client.send_message(
                 BOTLOG_CHATID,
