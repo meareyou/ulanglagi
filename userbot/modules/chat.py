@@ -144,7 +144,5 @@ CMD_HELP.update({
 \n\n.unmutechat\
 \nUsage: Unmutes a muted chat.\
 \n\n.mutechat\
-\nUsage: Allows you to mute any chat.\
-\n\n.mention <username> <text>\
-\nUsage: Generates the user's permanent link with custom text."
+\nUsage: Allows you to mute any chat."
 })
