@@ -1077,6 +1077,8 @@ async def let_me_google_that_for_you(lmgtfy_q):
 async def scam(event):
     await event.delete()
     time, input_str = event.pattern_match.group(1).split()
+    if time < 0:
+        time = 60
     action = "typing"
     if input_str:
         action = input_str
