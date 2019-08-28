@@ -1076,12 +1076,12 @@ async def let_me_google_that_for_you(lmgtfy_q):
 @errors_handler
 async def scam(event):
     await event.delete()
-    input_str = event.pattern_match.group(1)
+    time, input_str = event.pattern_match.group(1).split()
     action = "typing"
     if input_str:
         action = input_str
     async with event.client.action(event.chat_id, action):
-        await asyncio.sleep(60)
+        await asyncio.sleep(int(time))
 
 
 @register(pattern=r".type(?: |$)(.*)", outgoing=True)
@@ -1099,7 +1099,7 @@ async def typewriter(typew):
             await typew.edit("`Give a text to type!`")
             return
         sleep_time = 0.03
-        typing_symbol = "|"
+        typing_symbol = "▮"
         old_text = ''
         await typew.edit(typing_symbol)
         await asyncio.sleep(sleep_time)
@@ -1169,7 +1169,8 @@ CMD_HELP.update({
 \nUsage: Let me Google that for you real quick !!\
 \n\n.decide [Optional: (yes, no, maybe)]\
 \nUsage: Make a quick decision.\
-\n\n.scam [Optional: (typing, contact, game, location, voice, round, video, photo, document)]\
+\n\n.scam <time> <action>\
+\n[Optional Actions: (typing, contact, game, location, voice, round, video, photo, document)]\
 \nUsage: Create fake chat actions, for fun. (Default action: typing)\
 \n\n\nThanks to 🅱️ottom🅱️ext🅱️ot (@NotAMemeBot) for some of these."
 })
