@@ -97,7 +97,7 @@ async def time_func(tdata):
                 for i, item in enumerate(timezones):
                     return_str += f"`{i+1}. {item}`\n"
 
-                return_str += "`Choose one by typing the number "
+                return_str += "\n`Choose one by typing the number "
                 return_str += "in the command.`\n"
                 return_str += f"`Example: .time {c_name} 2`"
 
@@ -165,7 +165,7 @@ async def date_func(dat):
                 for i, item in enumerate(timezones):
                     return_str += f"`{i+1}. {item}`\n"
 
-                return_str += "`Choose one by typing the number "
+                return_str += "\n`Choose one by typing the number "
                 return_str += "in the command.`\n"
                 return_str += f"Example: .date {c_name} 2"
 
@@ -219,7 +219,7 @@ async def set_time_country(loc):
                 for i, item in enumerate(timezones):
                     return_str += f"`{i+1}. {item}`\n"
 
-                return_str += "`Choose one by typing the number "
+                return_str += "\n`Choose one by typing the number "
                 return_str += "in the command.`\n"
                 return_str += f"Example: .settime {c_name} 2"
 
