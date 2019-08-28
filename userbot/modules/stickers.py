@@ -58,7 +58,7 @@ async def kang(args):
                     emojibypass = True
             elif "tgsticker" in message.media.document.mime_type:
                 await args.edit(f"`{random.choice(KANGING_STR)}`")
-                await bot.download_file(message.media.document, 'AnimatedSticker.tgs')
+                #await bot.download_file(message.media.document, 'AnimatedSticker.tgs')
 
                 attributes = message.media.document.attributes
                 for attribute in attributes:
@@ -137,8 +137,8 @@ async def kang(args):
                             # Ensure user doesn't get spamming notifications
                             await bot.send_read_acknowledge(conv.chat_id)
                             if is_anim:
-                                await bot.forward_messages('Stickers',
-                                                           [message.id], args.chat_id)
+                                await conv.send_file('AnimatedSticker.tgs')
+                                remove('AnimatedSticker.tgs')
                             else:
                                 file.seek(0)
                                 await conv.send_file(file, force_document=True)
@@ -170,7 +170,7 @@ async def kang(args):
                             )
                             return
                     if is_anim:
-                        await conv.send_file('AnimatedSticker.tgs', force_document=True)
+                        await conv.send_file('AnimatedSticker.tgs')
                         remove('AnimatedSticker.tgs')
                     else:
                         file.seek(0)
@@ -199,7 +199,7 @@ async def kang(args):
                     # Ensure user doesn't get spamming notifications
                     await bot.send_read_acknowledge(conv.chat_id)
                     if is_anim:
-                        await conv.send_file('AnimatedSticker.tgs', force_document=True)
+                        await conv.send_file('AnimatedSticker.tgs')
                         remove('AnimatedSticker.tgs')
                     else:
                         file.seek(0)
