@@ -48,8 +48,12 @@ async def ANTI_SPAMBOT(welcm):
                     users = welcm.action_message.action.users
                 else:
                     users = [welcm.action_message.from_id]
+                    
             await sleep(5)
             spambot = False
+            
+            if not users:
+                return
 
             for user_id in users:
                 async for message in bot.iter_messages(
