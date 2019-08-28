@@ -59,7 +59,7 @@ async def on_snip(event):
 async def on_snip_save(event):
     """ For .snip command, saves snips for future use. """
     try:
-        from userbot.modules.sql_helper.snips_sql import get_snips
+        from userbot.modules.sql_helper.snips_sql import add_snip
     except AtrributeError:
         await event.edit("`Running on Non-SQL mode!`")
         return
