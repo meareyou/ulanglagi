@@ -120,7 +120,7 @@ async def on_snip_delete(event):
     """ For .delete command, deletes a snip. """
     try:
         from userbot.modules.sql_helper.snips_sql import remove_snip
-    except AttributeError"
+    except AttributeError:
         await event.edit("`Running on Non-SQL mode!`")
         return
     name = event.pattern_match.group(1)
