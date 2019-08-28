@@ -42,15 +42,17 @@ async def on_snip(event):
             )
         else:
             media = None
-        message_id = event.message.id
         if event.reply_to_msg_id:
             message_id = event.reply_to_msg_id
+        else:
+            message_id = None
         await event.client.send_message(
             event.chat_id,
             snip.reply,
             reply_to=message_id,
             file=media
         )
+        await event.delete()
 
 
 @register(outgoing=True, pattern="^.snip (.*)")
@@ -82,7 +84,7 @@ async def on_snip_save(event):
                 snip['hash'] = media.access_hash
                 snip['fr'] = media.file_reference
                 
-        success = "`Snip {} successfully. Use` ${} `anywhere to get it`"
+        success = "`Snip {} successfully. Use` **${}** `anywhere to get it`"
         
         if add_snip(name, snip['text'], snip['type'], snip.get('id'), snip.get('hash'), snip.get('fr')) is False:
             await event.edit(success.format('updated', name))
