@@ -13,6 +13,7 @@ from telethon.tl.types import MessageEntityMentionName
 from userbot import CMD_HELP, BOTLOG, BOTLOG_CHATID, bot
 from userbot.events import register, errors_handler
 
+
 @register(outgoing=True, pattern="^.userid$")
 @errors_handler
 async def useridgetter(target):
@@ -76,6 +77,8 @@ async def kickme(leave):
     """ Basically it's .kickme command """
     if not leave.text[0].isalpha() and leave.text[0] not in ("/", "#", "@", "!"):
         await leave.edit("`Nope, no, no, I go away`")
+        sleep(2)
+        await leave.delete()
         await bot(LeaveChannelRequest(leave.chat_id))
 
 
@@ -91,8 +94,8 @@ async def unmute_chat(unm_e):
             return
         unkread(str(unm_e.chat_id))
         await unm_e.edit("```Unmuted this chat Successfully```")
-	sleep(2)
-	await unm_e.delete()
+        sleep(2)
+        await unm_e.delete()
 
 
 @register(outgoing=True, pattern="^.mutechat$")
@@ -108,8 +111,8 @@ async def mute_chat(mute_e):
         await mute_e.edit(str(mute_e.chat_id))
         kread(str(mute_e.chat_id))
         await mute_e.edit("`Shush! This chat will be silenced!`")
-	sleep(2)
-	await mute_e.delete()
+        sleep(2)
+        await mute_e.delete()
         if BOTLOG:
             await mute_e.client.send_message(
                 BOTLOG_CHATID,
