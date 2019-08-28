@@ -76,8 +76,6 @@ async def kickme(leave):
     """ Basically it's .kickme command """
     if not leave.text[0].isalpha() and leave.text[0] not in ("/", "#", "@", "!"):
         await leave.edit("`Nope, no, no, I go away`")
-	sleep(2)
-	await leave.delete()
         await bot(LeaveChannelRequest(leave.chat_id))
 
 
