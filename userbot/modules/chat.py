@@ -7,9 +7,6 @@
 from time import sleep
 
 from telethon.tl.functions.channels import LeaveChannelRequest
-from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import MessageEntityMentionName
-
 from userbot import CMD_HELP, BOTLOG, BOTLOG_CHATID, bot
 from userbot.events import register, errors_handler
 
