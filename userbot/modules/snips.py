@@ -51,7 +51,6 @@ async def on_snip(event):
             reply_to=message_id,
             file=media
         )
-        await event.delete()
 
 
 @register(outgoing=True, pattern="^.snip (.*)")
@@ -105,7 +104,7 @@ async def on_snip_list(event):
         message = "`No snips available right now.`"
         all_snips = get_snips()
         for a_snip in all_snips:
-            if message == "`There are no saved notes in this chat`":
+            if message == "`No snips available right now.`":
                 message = "Available snips:\n"
                 message += f"- `${a_snip.snip}`\n"
             else:
