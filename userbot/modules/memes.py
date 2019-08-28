@@ -1072,21 +1072,24 @@ async def let_me_google_that_for_you(lmgtfy_q):
         await lmgtfy_q.edit(f"[{query}]({r.json()['shorturl']})")
 
 
-@register(pattern=r".scam(?: |$)(.*)", outgoing=True)
+@register(pattern=r".scam (.*) (.*)", outgoing=True)
 @errors_handler
 async def scam(event):
     """ Just a small command to fake chat actions for fun !! """
     if not event.text[0].isalpha() and event.text[0] not in ("/", "#", "@", "!"):
-        await event.delete()
         input_str = event.pattern_match.group(1)
-        time = int(event.pattern_match.group(1).split()[1])
-        if not time or (time < 0):
-            time = 60
+        input_time = event.pattern_match.group(2)
         action = "typing"
-        if input_str:
-            action = input_str
-        async with event.client.action(event.chat_id, action):
-            await asyncio.sleep(int(time))
+        try:
+            input_time = int(input_time)
+            if (input_time > 0):
+                action_time = input_time
+                await event.delete()
+                async with event.client.action(event.chat_id, action):
+                    await asyncio.sleep(int(time))
+        except:
+            await event.edit("`Wrong Syntax !!`")
+            return
 
 
 @register(pattern=r".type(?: |$)(.*)", outgoing=True)
@@ -1104,8 +1107,8 @@ async def typewriter(typew):
             await typew.edit("`Give a text to type!`")
             return
         sleep_time = 0.03
-        typing_symbol = "▮"
-        old_text = ''
+        typing_symbol = "█"
+        old_text = None
         await typew.edit(typing_symbol)
         await asyncio.sleep(sleep_time)
         for character in message:
@@ -1174,7 +1177,7 @@ CMD_HELP.update({
 \nUsage: Let me Google that for you real quick !!\
 \n\n.decide [Optional: (yes, no, maybe)]\
 \nUsage: Make a quick decision.\
-\n\n.scam <time (default = 60)> <action (default = 'typing')>\
+\n\n.scam <action> <time>\
 \n[Available Actions: (typing, contact, game, location, voice, round, video, photo, document)]\
 \nUsage: Create fake chat actions, for fun. (Default action: typing)\
 \n\n\nThanks to 🅱️ottom🅱️ext🅱️ot (@NotAMemeBot) for some of these."
