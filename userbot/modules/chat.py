@@ -49,45 +49,42 @@ async def chatidgetter(chat):
 
 @register(outgoing=True, pattern="^.mention(?: |$)(.*)")
 @errors_handler
-async def mention(event):
-    """ For .mention, generates a permalink to a user's profile with custom caption. """
+async def mention(event):	
     if not event.text[0].isalpha() and event.text[0] not in ("/", "#", "@", "!"):
-        if event.fwd_from:
-            return
-        input_str = event.pattern_match.group(1)
-        target, mention_text = input_str.split(' ', 1)
-        replied_user = await get_user(event, target)
-        user_id = replied_user.user.id
-        caption = """<a href='tg://user?id={}'>{}</a>""".format(
-            user_id, str(mention_text))
-        await event.edit(caption, parse_mode="HTML")
+	input_str = event.pattern_match.group(1)
 
-async def get_user(event, target):
-    """ Get the user from argument or replied message. """
-    if event.reply_to_msg_id:
-        previous_message = await event.get_reply_message()
-        replied_user = await event.client(GetFullUserRequest(previous_message.from_id))
-    else:
-        user = target
+	if event.reply_to_msg_id:
+		previous_message = await event.get_reply_message()
+		if previous_message.forward:
+			replied_user = await bot(GetFullUserRequest(previous_message.forward.from_id))
+		else:
+			replied_user = await bot(GetFullUserRequest(previous_message.from_id))
+	else:
+		if event.message.entities is not None:
+			mention_entity = event.message.entities
+			probable_user_mention_entity = mention_entity[0]
+			if type(probable_user_mention_entity) == MessageEntityMentionName:
+				user_id = probable_user_mention_entity.user_id
+				replied_user = await bot(GetFullUserRequest(user_id))
+		else:
+			try:
+				user_object = await bot.get_entity(input_str)
+				user_id = user_object.id
+				replied_user = await bot(GetFullUserRequest(user_id))
+			except Exception as e:
+				await event.edit(str(e))
+				return
 
-        if user.isnumeric():
-            user = int(user)
-
-        if event.message.entities is not None:
-            probable_user_mention_entity = event.message.entities[0]
-
-            if isinstance(probable_user_mention_entity, MessageEntityMentionName):
-                user_id = probable_user_mention_entity.user_id
-                replied_user = await event.client(GetFullUserRequest(user_id))
-                return replied_user
-        try:
-            user_object = await event.client.get_entity(user)
-            replied_user = await event.client(GetFullUserRequest(user_object.id))
-        except (TypeError, ValueError) as err:
-            await event.edit(str(err))
-            return None
-
-    return replied_user
+	user_id = replied_user.user.id
+	caption = """<a href='tg://user?id={}'>{}</a>""".format(user_id, input_str)
+	await bot.send_message(
+		e.chat_id,
+		caption,
+		parse_mode="HTML",        
+		force_document=False,
+		silent=True
+		)
+	await e.delete()
 
 @register(outgoing=True, pattern=r"^.log(?: |$)([\s\S]*)")
 @errors_handler
