@@ -58,7 +58,7 @@ async def kang(args):
                     emojibypass = True
             elif "tgsticker" in message.media.document.mime_type:
                 await args.edit(f"`{random.choice(KANGING_STR)}`")
-                #await bot.download_file(message.media.document, 'AnimatedSticker.tgs')
+                await bot.download_file(message.media.document, 'AnimatedSticker.tgs')
 
                 attributes = message.media.document.attributes
                 for attribute in attributes:
