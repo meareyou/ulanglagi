@@ -42,14 +42,16 @@ async def on_snip(event):
             )
         else:
             media = None
-        if event.reply_to_msg_id:
-            message_id = event.reply_to_msg_id
-        else:
-            message_id = None
+            
+        message_id_to_reply = event.message.reply_to_msg_id
+        
+        if not message_id_to_reply:
+            message_id_to_reply = None
+            
         await event.client.send_message(
             event.chat_id,
             snip.reply,
-            reply_to=message_id,
+            reply_to=message_id_to_reply,
             file=media
         )
         await event.delete()
