@@ -1072,14 +1072,14 @@ async def let_me_google_that_for_you(lmgtfy_q):
         await lmgtfy_q.edit(f"[{query}]({r.json()['shorturl']})")
 
 
-@register(pattern=r".scam (.*) (.*)", outgoing=True)
+@register(pattern=r".scam(?: |$)(.*)", outgoing=True)
 @errors_handler
 async def scam(event):
     """ Just a small command to fake chat actions for fun !! """
     if not event.text[0].isalpha() and event.text[0] not in ("/", "#", "@", "!"):
         await event.delete()
         input_str = event.pattern_match.group(1)
-        time = int(event.pattern_match.group(2))
+        time = int(event.pattern_match.group(1).split()[1])
         if not time or (time < 0):
             time = 60
         action = "typing"
