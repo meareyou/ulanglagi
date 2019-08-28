@@ -90,7 +90,7 @@ async def ANTI_SPAMBOT(welcm):
                         pass
 
                     if data and data['ok']:
-                        reason = f"[Banned by Combot Anti Spam](https://combot.org/cas/query?u={user.id})"
+                        reason = f"[Banned by Combot Anti Spam](https://combot.org/cas/query?u={check_user.id})"
                         spambot = True
                     elif "t.cn/" in message.text:
                         reason = "Match on `t.cn` URLs"
@@ -108,7 +108,7 @@ async def ANTI_SPAMBOT(welcm):
                         reason = "Match on `bit.ly` URLs"
                         spambot = True
                     else:
-                        if user.first_name in (
+                        if check_user.id.first_name in (
                                 "Bitmex",
                                 "Promotion",
                                 "Information",
@@ -131,7 +131,7 @@ async def ANTI_SPAMBOT(welcm):
                 await welcm.reply(
                     "`Potential Spambot Detected! Kicking away! "
                     "Will log the ID for further purposes!\n"
-                    f"USER:` [{user.first_name}](tg://user?id={user.id})")
+                    f"USER:` [{check_user.first_name}](tg://user?id={check_user.id})")
 
                 chat = await welcm.get_chat()
                 admin = chat.admin_rights
@@ -150,7 +150,7 @@ async def ANTI_SPAMBOT(welcm):
                         await welcm.client(
                             EditBannedRequest(
                                 welcm.chat_id,
-                                user.id,
+                                check_user.id,
                                 KICK_RIGHTS
                             )
                         )
