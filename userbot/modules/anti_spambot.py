@@ -30,7 +30,8 @@ async def ANTI_SPAMBOT(welcm):
         if welcm.user_joined or welcm.user_added:
             adder = None
             ignore = False
-
+            users = None
+            
             if welcm.user_added:
                 ignore = False
                 adder = welcm.action_message.from_id
@@ -42,6 +43,7 @@ async def ANTI_SPAMBOT(welcm):
 
             if ignore:
                 return
+            
             elif welcm.user_joined:
                 users_list = hasattr(welcm.action_message.action, "users")
                 if users_list:
