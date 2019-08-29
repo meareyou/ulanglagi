@@ -160,14 +160,7 @@ async def type_afk_is_not_true(notafk):
     if ISAFK:
         ISAFK = False
         await notafk.respond("I'm no longer AFK.")
-        afk_info = await notafk.respond(
-            "`You recieved " +
-            str(COUNT_MSG) +
-            " messages while you were away. Check log for more details.`" +
-            " `This auto-generated message shall be self destructed in 2 seconds.`"
-        )
-        time.sleep(2)
-        await afk_info.delete()
+        sleep(2)
         if BOTLOG:
             await notafk.client.send_message(
                 BOTLOG_CHATID,
