@@ -188,7 +188,7 @@ async def gsearch(q_event):
             msg += f"[{title}]({link})\n{desc}\n\n"
 
         await q_event.edit(
-            "**Search Query:**\n`" + match_ + "`\n\n**Results:**\n" + msg,
+            "**Search Query:**\n`" + match + "`\n\n**Results:**\n" + msg,
             link_preview = False
         )
 
