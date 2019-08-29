@@ -13,7 +13,7 @@ from userbot.events import register, errors_handler
 async def mention(e):
     try:
         input_str, text = e.pattern_match.group(1).split(' ', 1)
-    except:
+    except ValueError:
         input_str = e.pattern_match.group(1)
 
     if e.reply_to_msg_id:
@@ -39,9 +39,10 @@ async def mention(e):
                 return None
 
     user_id = replied_user.user.id
-    if text:
-        caption = """<a href='tg://user?id={}'>{}</a>""".format(user_id, text)
-    else:
+    try:
+        if text:
+            caption = """<a href='tg://user?id={}'>{}</a>""".format(user_id, text)
+    except UnboundLocalError:
         caption = """<a href='tg://user?id={}'>{}</a>""".format(user_id, input_str)
     await bot.send_message(
         e.chat_id,
