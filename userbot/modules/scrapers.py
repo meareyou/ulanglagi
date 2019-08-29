@@ -182,11 +182,13 @@ async def gsearch(q_event):
         gresults = gsearch.search(*search_args)
         msg = ""
         for i in range(10):
-            title = gresults["titles"][i]
-            link = gresults["links"][i]
-            desc = gresults["descriptions"][i]
-            msg += f"[{title}]({link})\n{desc}\n\n"
-
+            try:
+                title = gresults["titles"][i]
+                link = gresults["links"][i]
+                desc = gresults["descriptions"][i]
+                msg += f"[{title}]({link})\n{desc}\n\n"
+            except IndexError:
+                break
         await q_event.edit(
             "**Search Query:**\n`" + match + "`\n\n**Results:**\n" + msg,
             link_preview = False
@@ -195,7 +197,7 @@ async def gsearch(q_event):
         if BOTLOG:
             await q_event.client.send_message(
                 BOTLOG_CHATID,
-                "Google Search query `" + match_ + "` was executed successfully",
+                "Google Search query `" + match + "` was executed successfully",
             )
 
 @register(outgoing=True, pattern=r"^.wiki (.*)")
