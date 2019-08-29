@@ -170,7 +170,14 @@ async def gsearch(q_event):
     if not q_event.text[0].isalpha() and q_event.text[0] not in (
             "/", "#", "@", "!"):
         match = q_event.pattern_match.group(1)
-        search_args = (f"{match}", 1)
+        page = findall(r"page=\d+", match)
+        try:
+            page = page[0]
+            page = page.replace("page=", "")
+            match = match.replace("page=" + page[0], "")
+        except IndexError:
+            page = 1
+        search_args = (str(match), page)
         gsearch = GoogleSearch()
         gresults = gsearch.search(search_args)
         msg = ""
