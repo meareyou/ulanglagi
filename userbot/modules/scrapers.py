@@ -23,6 +23,7 @@ from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
 from urbandict import define
 from requests import get
+from search_engine_parser import GoogleSearch
 from google_images_download import google_images_download
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -162,22 +163,22 @@ async def _(event):
         ms = (end - start).seconds
 
 
-@register(outgoing=True, pattern=r"^.search (.*)")
+@register(outgoing=True, pattern=r"^.google (.*)")
 @errors_handler
 async def gsearch(q_event):
     """ For .google command, do a Google search. """
     if not q_event.text[0].isalpha() and q_event.text[0] not in (
             "/", "#", "@", "!"):
-        match_ = q_event.pattern_match.group(1)
-        match = quote_plus(match_)
-        plain_txt = get(f"https://www.startpage.com/do/search?cmd=process_search&query={match}", 'html').text
-        soup = BeautifulSoup(plain_txt, "lxml")
-
+        match = q_event.pattern_match.group(1)
+        search_args = (f"{match}", 1)
+        gsearch = GoogleSearch()
+        gresults = gsearch.search(search_args)
         msg = ""
-        for result in soup.find_all('a', {'class': 'w-gl__result-title'}):
-            title = result.text
-            link = result.get('href')
-            msg += f"{title}{link}\n"
+        for i in range(10):
+            title = gresults["titles"][i]
+            link = gresults["links"][i]
+            desc = gresults["descriptions"][i]
+            msg += f"{title}{link}\n{desc}\n\n"
 
         await q_event.edit(
             "**Search Query:**\n`" + match_ + "`\n\n**Results:**\n" + msg,
@@ -187,7 +188,7 @@ async def gsearch(q_event):
         if BOTLOG:
             await q_event.client.send_message(
                 BOTLOG_CHATID,
-                "Search query `" + match_ + "` was executed successfully",
+                "Google Search query `" + match_ + "` was executed successfully",
             )
 
 @register(outgoing=True, pattern=r"^.wiki (.*)")
