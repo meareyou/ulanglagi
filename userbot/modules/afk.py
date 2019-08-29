@@ -18,14 +18,15 @@ from userbot import (
     ISAFK,
     BOTLOG,
     BOTLOG_CHATID,
-    USERS)
+    USERS,
+    PM_AUTO_BAN)
 
 from userbot.events import register, errors_handler
 
 # ========================= CONSTANTS ============================
 AFKSTR = [
         "I'm busy right now. Please talk in a bag and when I come back you can just give me the bag!",
-        "I'm away right now. If you need anything, leave a message after the beep:\n\n`beeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeep`!",
+        "I'm away right now. If you need anything, leave a message after the beep:\n`beeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeep`!",
         "You missed me, next time aim better.",
         "I'll be back in a few minutes and if I'm not...,\nwait longer.",
         "I'm not here right now, so I'm probably somewhere else.",
@@ -40,10 +41,10 @@ AFKSTR = [
         "I went this way\n<----",
         "Please leave a message and make me feel even more important than I already am.",
         "I am not here so stop writing to me,\nor else you will find yourself with a screen full of your own messages.",
-        "If I were here, I'd tell you where I am. But I'm not, so ask me when I return...",
-        "I am away! I don't know when I'll be back! Hopefully a few minutes from now!",
+        "If I were here,\nI'd tell you where I am.\n\nBut I'm not,\nso ask me when I return...",
+        "I am away!\nI don't know when I'll be back!\nHopefully a few minutes from now!",
         "I'm not available right now so please leave your name, number, and address and I will stalk you later.",
-        "Sorry, I'm not here right now. Feel free to talk to my userbot as long as you like. I'll get back to you later.",
+        "Sorry, I'm not here right now.\nFeel free to talk to my userbot as long as you like.\nI'll get back to you later.",
         "I bet you were expecting an away message!",
         "Life is so short, there are so many things to do...\nI'm away doing one of them..",
         "I am not here right now...\nbut if I was...\n\nwouldn't that be awesome?",
@@ -95,14 +96,12 @@ async def afk_on_pm(sender):
     global USERS
     global COUNT_MSG
     if sender.is_private and sender.sender_id != 777000 and not (await sender.get_sender()).bot:
-        try:
-            from userbot.modules.sql_helper.pm_permit_sql import is_approved
-        except AttributeError:
-            return
         if PM_AUTO_BAN:
-            apprv = is_approved(sender.sender_id)
-        else:
-            apprv = True # duh.
+            try:
+                from userbot.modules.sql_helper.pm_permit_sql import is_approved
+                apprv = is_approved(sender.sender_id)
+            except AttributeError:
+                apprv = True # duh
         if apprv and ISAFK:
             if sender.sender_id not in USERS:
                 if AFKREASON:
@@ -141,7 +140,7 @@ async def set_afk(afk_e):
         string = str(message[5:])
         global ISAFK
         global AFKREASON
-        await afk_e.edit("AFK AF!")
+        await afk_e.edit("Going AFK !!")
         if string != "":
             AFKREASON = string
         if BOTLOG:
@@ -159,15 +158,15 @@ async def type_afk_is_not_true(notafk):
     global USERS
     global AFKREASON
     if ISAFK:
-        delgvar("AFK_STATUS")
+        ISAFK = False
         await notafk.respond("I'm no longer AFK.")
-        delgvar("AFK_REASON")
         afk_info = await notafk.respond(
             "`You recieved " +
             str(COUNT_MSG) +
-            " messages while you were away. Check log for more details.`"
+            " messages while you were away. Check log for more details.`" +
+            " `This auto-generated message shall be self destructed in 2 seconds.`"
         )
-        await sleep(2)
+        time.sleep(2)
         await afk_info.delete()
         if BOTLOG:
             await notafk.client.send_message(
@@ -195,6 +194,7 @@ async def type_afk_is_not_true(notafk):
                 )
         COUNT_MSG = 0
         USERS = {}
+        AFKREASON = None
 
 CMD_HELP.update({
     "afk": ".afk [Optional Reason]\
