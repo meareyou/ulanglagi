@@ -177,9 +177,9 @@ async def gsearch(q_event):
             match = match.replace("page=" + page[0], "")
         except IndexError:
             page = 1
-        search_args = (str(match), page)
+        search_args = (str(match), int(page))
         gsearch = GoogleSearch()
-        gresults = gsearch.search(search_args)
+        gresults = gsearch.search(*search_args)
         msg = ""
         for i in range(10):
             title = gresults["titles"][i]
