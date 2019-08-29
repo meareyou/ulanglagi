@@ -11,7 +11,10 @@ from userbot.events import register, errors_handler
 @register(outgoing=True, pattern="^.mention (.*)")
 @errors_handler
 async def mention(e):
-    input_str = e.pattern_match.group(1)
+    try:
+        input_str, text = e.pattern_match.group(1).split(' ', 1)
+    except:
+        input_str = e.pattern_match.group(1)
 
     if e.reply_to_msg_id:
         previous_message = await e.get_reply_message()
@@ -36,7 +39,10 @@ async def mention(e):
                 return None
 
     user_id = replied_user.user.id
-    caption = """<a href='tg://user?id={}'>{}</a>""".format(user_id, input_str)
+    if text:
+        caption = """<a href='tg://user?id={}'>{}</a>""".format(user_id, text)
+    else:
+        caption = """<a href='tg://user?id={}'>{}</a>""".format(user_id, input_str)
     await bot.send_message(
         e.chat_id,
         caption,
