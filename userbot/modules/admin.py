@@ -28,7 +28,7 @@ from userbot.events import register, errors_handler
 # =================== CONSTANT ===================
 PP_TOO_SMOL = "`The image is too small`"
 PP_ERROR = "`Failure while processing the image`"
-NO_ADMIN = "`I am not an admin!`"
+NO_ADMIN = "`I am not an admin! @WHOUAREUWHYTAGMElol`"
 NO_PERM = "`I don't have sufficient permissions!`"
 NO_SQL = "`Running on Non-SQL mode!`"
 
